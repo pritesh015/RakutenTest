@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">RakutenTest</string>
+
+    <string name="error_msg">Error</string>
+    
+    <!-- Product detail -->
+    <string name="reviews">%d avis</string>
+    <string name="best_price">€%.2f </string>
+    <string name="percent_reduce">%d%%</string>
+    <string name="used_best_price">Occasion</string>
+    <string name="new_best_price">Neuf</string>
+</resources>
