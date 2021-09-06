@@ -54,6 +54,7 @@ class MainActivityAdapter(var items: List<ResponseListProducts>, val context: Co
 
         holder.itemProductView.setOnClickListener {
             Toast.makeText(context, items[position].headline, Toast.LENGTH_SHORT).show()
+            listener!!.onItemClicked(items[position].id)
         }
     }
 
@@ -69,6 +70,7 @@ class MainActivityAdapter(var items: List<ResponseListProducts>, val context: Co
 
     interface OnBottomReachedListener {
         fun onBottomReached()
+        fun onItemClicked(id: Long)
     }
 }
 

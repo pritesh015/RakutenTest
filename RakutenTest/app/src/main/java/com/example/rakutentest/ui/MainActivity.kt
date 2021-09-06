@@ -2,8 +2,10 @@ package com.example.rakutentest.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mainActivityViewModel: MainActivityViewModel
     private lateinit var productListAdapter: MainActivityAdapter
+    private lateinit var productDetailFragment: ProductDetailFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
         productListAdapter = MainActivityAdapter(listOf(), this)
 
+        productDetailFragment = ProductDetailFragment()
+
         setUpBindings()
     }
 
@@ -33,6 +38,15 @@ class MainActivity : AppCompatActivity() {
         productListAdapter.listener = object : MainActivityAdapter.OnBottomReachedListener {
             override fun onBottomReached() {
                 mainActivityViewModel.getNextProducts()
+            }
+
+            override fun onItemClicked(id: Long) {
+                mainActivityViewModel.getProductDetail(id)
+                binding.fragmentContainer.visibility = View.VISIBLE
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, productDetailFragment)
+                    .addToBackStack("ProductDetail")
+                    .commit()
             }
         }
         binding.rvListProduct.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -42,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 mainActivityViewModel.getProducts(query ?: "")
 
-                return false
+                return true
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
@@ -61,5 +75,16 @@ class MainActivity : AppCompatActivity() {
         mainActivityViewModel.onErrorLoaded().observe(this, Observer { error ->
             Toast.makeText(this, getString(R.string.error_msg), Toast.LENGTH_SHORT).show()
         })
+    }
+
+    override fun onBackPressed() {
+        val count = supportFragmentManager.backStackEntryCount
+
+        if (count == 0) {
+            super.onBackPressed()
+        } else {
+            supportFragmentManager.popBackStack()
+            binding.fragmentContainer.visibility = View.GONE
+        }
     }
 }

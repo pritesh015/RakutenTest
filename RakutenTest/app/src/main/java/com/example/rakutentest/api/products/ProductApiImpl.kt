@@ -2,6 +2,7 @@ package com.example.rakutentest.api.products
 
 import android.util.Log
 import com.example.rakutentest.api.models.ResponseProduct
+import com.example.rakutentest.api.models.ResponseProductDetail
 import com.example.rakutentest.retrofit.RetrofitInit
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,6 +17,22 @@ class ProductApiImpl: ProductApi {
     override fun getProducts(keyword: String, page: Int): Single<ResponseProduct> =
         Single.create { emitter ->
             productApi.getProducts(keyword, page)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onSuccess = { response ->
+                        emitter.onSuccess(response)
+                    },
+                    onError = {
+                        Log.e(LOGTAG, it.localizedMessage!!)
+                        emitter.onError(it)
+                    }
+                )
+        }
+
+    override fun getProductDetail(id: String): Single<ResponseProductDetail> =
+        Single.create { emitter ->
+            productApi.getProductDetail(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(

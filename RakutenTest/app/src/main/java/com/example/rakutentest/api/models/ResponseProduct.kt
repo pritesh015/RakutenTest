@@ -33,16 +33,16 @@ data class ResponseListProducts(
     val id: Long = 0,
 
     @field:Json(name = "newBestPrice")
-    val newBestPrice: Float,
+    val newBestPrice: Float = 0.0F,
 
     @field:Json(name = "usedBestPrice")
-    val usedBestPrice: Float,
+    val usedBestPrice: Float = 0.0F,
 
     @field:Json(name = "headline")
     val headline: String? = null,
 
     @field:Json(name = "reviewsAverageNote")
-    val reviewsAverageNote: Float,
+    val reviewsAverageNote: Float = 0.0F,
 
     @field:Json(name = "nbReviews")
     val nbReviews: Int = 0,
@@ -60,7 +60,7 @@ data class ResponseListProducts(
 @JsonClass(generateAdapter = true)
 data class ResponseBuyBox(
     @field:Json(name = "salePrice")
-    val salePrice: Float,
+    val salePrice: Float = 0.0F,
 
     @field:Json(name = "advertType")
     val advertType: String? = null,
@@ -69,7 +69,7 @@ data class ResponseBuyBox(
     val advertQuality: String? = null,
 
     @field:Json(name = "saleCrossedPrice")
-    val saleCrossedPrice: Float = (0.0).toFloat(),
+    val saleCrossedPrice: Float = 0.0F,
 
     @field:Json(name = "salePercentDiscount")
     val salePercentDiscount: Int = 0

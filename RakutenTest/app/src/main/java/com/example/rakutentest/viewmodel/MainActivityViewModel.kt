@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.rakutentest.api.models.ResponseListProducts
 import com.example.rakutentest.api.models.ResponseProduct
+import com.example.rakutentest.api.models.ResponseProductDetail
 import com.example.rakutentest.models.ProductRepositoryImpl
 import io.reactivex.rxkotlin.subscribeBy
 
@@ -13,6 +14,7 @@ class MainActivityViewModel: ViewModel() {
 
     private var liveProductList: MutableLiveData<List<ResponseListProducts>> = MutableLiveData()
     private var liveNextProductList: MutableLiveData<List<ResponseListProducts>> = MutableLiveData()
+    private var liveProductDetail: MutableLiveData<ResponseProductDetail> = MutableLiveData()
     private var liveError: MutableLiveData<String> = MutableLiveData()
 
     private var page: Int = 1
@@ -31,7 +33,6 @@ class MainActivityViewModel: ViewModel() {
                         response.first.map {
                             list.add(it)
                         }
-                        println(response.second)
                         lastPage = response.second
                         liveProductList.postValue(list)
                     },
@@ -62,6 +63,20 @@ class MainActivityViewModel: ViewModel() {
                         )
                     }
         }
+    }
+
+    fun getProductDetail(id: Long) {
+        productRepositoryImpl.getProductDetail(id)
+            .run {
+                subscribeBy(
+                    onSuccess = { response ->
+                        liveProductDetail.postValue(response)
+                    },
+                    onError = {
+                        liveError.postValue(it.toString())
+                    }
+                )
+            }
     }
 
     fun onAllProductsLoaded(): LiveData<List<ResponseListProducts>> {
