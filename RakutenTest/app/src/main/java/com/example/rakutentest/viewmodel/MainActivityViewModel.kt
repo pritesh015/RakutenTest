@@ -87,6 +87,10 @@ class MainActivityViewModel: ViewModel() {
         return liveNextProductList
     }
 
+    fun onProductDetailLoaded() : LiveData<ResponseProductDetail> {
+        return liveProductDetail
+    }
+
     fun onErrorLoaded(): MutableLiveData<String> {
         return liveError
     }

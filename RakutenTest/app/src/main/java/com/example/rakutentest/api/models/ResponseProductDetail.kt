@@ -65,8 +65,8 @@ data class ResponseGlobalRating(
 
 @JsonClass(generateAdapter = true)
 data class ResponseImages(
-    @field:Json(name = "imageUrls")
-    val imageUrls: ResponseImagesUrls? = null,
+    @field:Json(name = "imagesUrls")
+    val imagesUrls: ResponseImagesUrls? = null,
 
     @field:Json(name = "id")
     val id: Long = 0

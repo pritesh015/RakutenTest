@@ -1,11 +1,12 @@
 package com.example.rakutentest.ui
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,10 +44,12 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClicked(id: Long) {
                 mainActivityViewModel.getProductDetail(id)
                 binding.fragmentContainer.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, productDetailFragment)
-                    .addToBackStack("ProductDetail")
-                    .commit()
+                if (!productDetailFragment.isAdded) {
+                    supportFragmentManager.beginTransaction()
+                        .add(R.id.fragment_container, productDetailFragment)
+                        .addToBackStack("ProductDetail")
+                        .commit()
+                }
             }
         }
         binding.rvListProduct.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -55,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 mainActivityViewModel.getProducts(query ?: "")
+                hideKeyboard()
 
                 return true
             }
@@ -75,6 +79,11 @@ class MainActivity : AppCompatActivity() {
         mainActivityViewModel.onErrorLoaded().observe(this, Observer { error ->
             Toast.makeText(this, getString(R.string.error_msg), Toast.LENGTH_SHORT).show()
         })
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(this.currentFocus!!.windowToken, 0)
     }
 
     override fun onBackPressed() {

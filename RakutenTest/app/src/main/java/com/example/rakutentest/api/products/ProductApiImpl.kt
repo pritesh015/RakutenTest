@@ -30,6 +30,7 @@ class ProductApiImpl: ProductApi {
                 )
         }
 
+    // Get product detail and return a ResponseProductDetail
     override fun getProductDetail(id: String): Single<ResponseProductDetail> =
         Single.create { emitter ->
             productApi.getProductDetail(id)
